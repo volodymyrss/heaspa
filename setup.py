@@ -3,5 +3,5 @@ from setuptools import setup
 setup(
     name='heaspa',
     py_modules=['heaspa'],
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
 )
