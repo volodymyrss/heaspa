@@ -1,4 +1,5 @@
-import heasp,os,pyfits
+import heasp,os
+from astropy.io import fits as pyfits
 from numpy import *
 
 # always clobber!
