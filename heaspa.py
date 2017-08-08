@@ -67,6 +67,7 @@ class RMF:
         rmf.AreaScaling=1
         rmf.ResponseThreshold=0
         rmf.RMFVersion="1.3.0"
+        rmf.EBDVersion="1.3.0"
 
         print "writing rmf with channels",len(self.ce1)
         for i in range(len(self.ce1)):
