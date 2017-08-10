@@ -26,8 +26,8 @@ class ARF:
 
 class PHA:
     def __init__(self,pha,staterr,exposure,syserr=None,datatype="COUNTS",response=None):
-        self.pha=pha
-        self.staterr=staterr
+        self.pha=array(pha)
+        self.staterr=array(staterr)
         self.exposure=exposure
         self.datatype=datatype
         self.response=response
@@ -38,9 +38,14 @@ class PHA:
         sp.Exposure=self.exposure
         sp.Datatype=self.datatype
 
+        m_good=~isinf(self.pha) & ~isinf(self.staterr)
+        self.pha[~m_good]=0
+        self.staterr[~m_good]=0
+
         print dir(sp)    
 
         print sp.disp()
+
         for i in range(len(self.pha)):
             sp.Pha[i]=self.pha[i]
             sp.StatError[i]=self.staterr[i]
