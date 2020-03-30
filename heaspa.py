@@ -1,6 +1,12 @@
-import heasp,os
+import os
 from astropy.io import fits as pyfits
 from numpy import *
+
+try:
+    import heasp
+    disabled=False
+except:
+    disabled=True
 
 # always clobber!
 
@@ -11,10 +17,14 @@ class ARF:
         self.effa=effa
     
     def write(self,fn):
+        if disabled:
+            print("heasp disabled!")
+            return
+
         arf=heasp.arf()
         nchan=len(self.e1)
         arf.initChannels(nchan)
-        print arf.disp()
+        print(arf.disp())
         for i in range(nchan):
             arf.LowEnergy[i]=self.e1[i]
             arf.HighEnergy[i]=self.e2[i]
@@ -33,6 +43,10 @@ class PHA:
         self.response=response
     
     def write(self,fn):
+        if disabled:
+            print("heasp disabled!")
+            return
+
         sp=heasp.pha()
         sp.initChannels(len(self.pha))
         sp.Exposure=self.exposure
@@ -42,9 +56,9 @@ class PHA:
         self.pha[~m_good]=0
         self.staterr[~m_good]=0
 
-        print dir(sp)    
+        print(dir(sp))    
 
-        print sp.disp()
+        print(sp.disp())
 
         for i in range(len(self.pha)):
             sp.Pha[i]=self.pha[i]
@@ -67,6 +81,10 @@ class RMF:
         self.matrix=matrix
     
     def write(self,fn):
+        if disabled:
+            print("heasp disabled!")
+            return
+
         rmf=heasp.rmf()
         rmf.FirstChannel=0
         rmf.AreaScaling=1
@@ -74,17 +92,17 @@ class RMF:
         rmf.RMFVersion="1.3.0"
         rmf.EBDVersion="1.3.0"
 
-        print "writing rmf with channels",len(self.ce1)
+        print("writing rmf with channels",len(self.ce1))
         for i in range(len(self.ce1)):
-            print i,self.ce1[i],self.ce2[i]
+            print(i,self.ce1[i],self.ce2[i])
             rmf.ChannelLowEnergy.push_back(float(self.ce1[i]))
             rmf.ChannelHighEnergy.push_back(float(self.ce2[i]))
 
-        print "writing rmf with rows",len(self.e1)
+        print("writing rmf with rows",len(self.e1))
         for i in range(len(self.e1)):
-            y=map(float,self.matrix[i,:])
+            y=list(map(float,self.matrix[i,:]))
 
-            print "rmf row",self.e1[i],self.e2[i],len(y)
+            print("rmf row",self.e1[i],self.e2[i],len(y))
             rmf.addRow(y,float(self.e1[i]),float(self.e2[i]))
             
 
